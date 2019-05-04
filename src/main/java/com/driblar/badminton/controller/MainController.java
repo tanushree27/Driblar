@@ -14,10 +14,10 @@ import java.util.Map;
 @Controller
 public class MainController {
 
-    private Tournament tournament;
+    private Tournament tournament = new Tournament(24, 6);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String printHelloWorld (ModelMap model) {
+    public String getHomePage (ModelMap model) {
         return "home";
     }
 
@@ -52,10 +52,31 @@ public class MainController {
     }
 
     @RequestMapping(value = "tournament", method = RequestMethod.GET)
-    public String redirectTournament (ModelMap model) {
+    public String getTournamentPage (ModelMap model) {
         model.addAttribute("tournament", tournament);
         if (tournament == null)
             return "redirect:/";
         return "tournament";
     }
+
+    @RequestMapping(value = "stage/roundrobin", method = RequestMethod.GET)
+    public String getRoundRobinPage  (@RequestParam Map<String, String> requestData, ModelMap model) {
+
+        if (tournament == null)
+            return "redirect:/";
+
+        model.addAttribute("poolsSize", tournament.getRoundRobinStage().getPools().size());
+
+        int poolNumber = 0;
+
+        if (requestData.containsKey("poolNum"))
+           poolNumber = Integer.parseInt(requestData.get("poolNum")) - 1;
+
+        model.addAttribute("selectPool", poolNumber + 1);
+        model.addAttribute("pool", tournament.getRoundRobinStage().getPools().get(poolNumber));
+
+        return "roundrobin";
+    }
+
+
 }

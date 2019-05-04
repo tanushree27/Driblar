@@ -9,6 +9,7 @@
 <nav class="nav">
     <a class="nav-link" href="/">New</a></li>
     <a class="nav-link" href="/tournament">Tournament</a>
+    <a class="nav-link" href="/stage/roundrobin">RoundRobin Stage</a>
 </nav>
 
 <style>
