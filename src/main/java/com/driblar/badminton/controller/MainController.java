@@ -4,14 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/")
 @Controller
 public class MainController {
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String printHelloWorld (ModelMap model) {
         model.addAttribute("message", "hello Tashu");
-        return "hello";
+        System.out.println("here");
+        return "home";
     }
 }
