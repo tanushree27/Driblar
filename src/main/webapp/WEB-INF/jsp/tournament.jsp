@@ -9,5 +9,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:forEach items="tournament.roundRobinStage.pools" var="pool">
-
+    ${pool}
+    <br>
 </c:forEach>

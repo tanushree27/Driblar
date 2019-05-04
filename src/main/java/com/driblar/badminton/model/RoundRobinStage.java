@@ -16,11 +16,11 @@ public class RoundRobinStage extends Stage {
         return null;
     }
 
-    RoundRobinStage (List<Player> players, int numberOfPools) {
+    RoundRobinStage (List<Player> players, int poolSize) {
         pools = new ArrayList<>();
 
-        for (int i = 0; i < numberOfPools; i++)
-            pools.add(new Pool(players.subList(i * players.size()/numberOfPools, (i + 1) * players.size()/numberOfPools)));
+        for (int i = 0; i < poolSize; i++)
+            pools.add(new Pool(players.subList(i * players.size()/poolSize, (i + 1) * players.size()/poolSize)));
 
     }
 }
