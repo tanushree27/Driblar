@@ -1,5 +1,6 @@
 package com.driblar.badminton.controller;
 
+import com.driblar.badminton.model.CustomResponse;
 import com.driblar.badminton.model.Tournament;
 import com.fasterxml.jackson.databind.JsonSerializable;
 import org.springframework.stereotype.Controller;
@@ -38,21 +39,23 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping(value = "/save/name", method = RequestMethod.POST)
-    public String saveName (@RequestBody Map<String, String> requestData, ModelMap model, HttpServletRequest request) {
+    public CustomResponse saveName (@RequestBody Map<String, String> requestData, ModelMap model, HttpServletRequest request) {
 
 
         int id = Integer.parseInt(requestData.get("id"));
         String name = requestData.get("name");
 
         System.out.println(name);
-        tournament.getPlayers().get(id).setName(name);
+        tournament.getPlayers().get(id - 1).setName(name);
 
-        return name;
+        return new CustomResponse(name);
     }
 
     @RequestMapping(value = "tournament", method = RequestMethod.GET)
     public String redirectTournament (ModelMap model) {
         model.addAttribute("tournament", tournament);
+        if (tournament == null)
+            return "redirect:/";
         return "tournament";
     }
 }

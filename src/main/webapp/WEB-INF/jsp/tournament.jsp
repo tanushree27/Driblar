@@ -9,10 +9,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<div class="container-fluid">
+<div class="row">
 <c:forEach items="${tournament.roundRobinStage.pools}" var="pool" varStatus="loop">
-
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
     <table class="table table-dark">
-        <h3>Pool ${loop.index + 1}</h3>
+        <h3 class="text-white">Pool ${loop.index + 1}</h3>
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -28,7 +30,16 @@
             <th scope="row">${player.id}</th>
             <c:choose>
                 <c:when test="${player.name == null}">
-                    <td><input id="name-${player.id}" type="text" class="player-name"><button class="btn btn-primary player-name-btn" id="${player.id}" type="button">save</button></td>
+                    <td id="td-${player.id}">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <input id="name-${player.id}" type="text" class="form-control form-control-sm player-name">
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-primary player-name-btn btn-sm" id="${player.id}" type="button">save</button>
+                            </div>
+                        </div>
+                    </td>
                 </c:when>
                 <c:otherwise>
                     <td>${player.name}</td>
@@ -40,13 +51,18 @@
         </tr>
         </c:forEach>
         </tbody>
+    </table>
+    </div>
 </c:forEach>
-
+</div>
+</div>
 <script>
     $(document).ready(function(){
 
         $('.player-name-btn').on('click', function () {
             if ($('#name-'+this.id).val() != '') {
+                var name = '#name-' + this.id;
+                var id = this.id;
                 $.ajax({
                     url: '/save/name',
                     type: 'POST',  // http method
@@ -57,9 +73,9 @@
                         'name': $('#name-' + this.id).val()
                     }),  // data to submit
                     success: function (data) {
-                        console.log(data);
-                        $('#name-' + this.id).prop('disabled', true);
-                        $('#' + this.id).prop('disabled', true);
+                        //data = JSON.parse(data);
+                        console.log('#td-'+this.id+"  "+data.text);
+                        $('#td-'+id).html(data.text);
                     },
                     error: function (errorMessage) {
                         console.error(errorMessage);
@@ -70,3 +86,9 @@
 
     });
 </script>
+
+<style>
+    .player-name-btn {
+        margin-left: 10px;
+    }
+</style>
