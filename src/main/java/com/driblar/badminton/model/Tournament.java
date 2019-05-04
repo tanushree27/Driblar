@@ -12,14 +12,16 @@ public class Tournament {
 
     private String name;
 
-    private int players;
+    private int playersSize;
+
+    private List<Player> players;
 
     private RoundRobinStage roundRobinStage;
 
     public Tournament (int participants, int pools) {
-        this.players = participants;
+        this.playersSize = participants;
 
-        List<Player> players = new ArrayList<>();
+        players = new ArrayList<>();
         for (int i = 0; i < participants; i++)
             players.add(new Player(i+1));
 

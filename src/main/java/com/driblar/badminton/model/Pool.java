@@ -1,11 +1,16 @@
 package com.driblar.badminton.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter
 public class Pool {
-    List<Player> players;
-    List<Match> matches;
+    private List<Player> players;
+
+    private List<Match> matches;
 
     public Pool (List<Player> players){
         this.players = players;
@@ -15,4 +20,5 @@ public class Pool {
                 matches.add(new Match(players.get(i), players.get(j)));
         }
     }
+
 }

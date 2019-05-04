@@ -1,12 +1,10 @@
 package com.driblar.badminton.controller;
 
 import com.driblar.badminton.model.Tournament;
+import com.fasterxml.jackson.databind.JsonSerializable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -19,7 +17,6 @@ public class MainController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String printHelloWorld (ModelMap model) {
-
         return "home";
     }
 
@@ -35,6 +32,27 @@ public class MainController {
         model.addAttribute("tournament", tournament);
 
         System.out.println(name);
+        return "redirect:/tournament";
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/save/name", method = RequestMethod.POST)
+    public String saveName (@RequestBody Map<String, String> requestData, ModelMap model, HttpServletRequest request) {
+
+
+        int id = Integer.parseInt(requestData.get("id"));
+        String name = requestData.get("name");
+
+        System.out.println(name);
+        tournament.getPlayers().get(id).setName(name);
+
+        return name;
+    }
+
+    @RequestMapping(value = "tournament", method = RequestMethod.GET)
+    public String redirectTournament (ModelMap model) {
+        model.addAttribute("tournament", tournament);
         return "tournament";
     }
 }

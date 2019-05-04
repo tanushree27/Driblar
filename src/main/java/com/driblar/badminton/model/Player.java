@@ -13,6 +13,12 @@ public class Player {
 
     private int age;
 
+    private int roundRobinWins = 0;
+
+    private int roundRobinLoss = 0;
+
+    private int roundRobinTies = 0;
+
     public Player (int id) {
         this.id = id;
     }
