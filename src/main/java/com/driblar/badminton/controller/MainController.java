@@ -6,7 +6,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/")
@@ -118,6 +120,16 @@ public class MainController {
 
         if (tournament == null)
             return "redirect:/";
+
+        List<Player> playerlist = new ArrayList<>();
+        for(Player player: tournament.getPlayers())
+        {
+            if(player.isQualified()){
+                playerlist.add(player);
+            }
+        }
+        model.addAttribute("players",playerlist);
+        model.addAttribute("knockout", tournament.getKnockoutStage());
 
         return "knockout";
     }

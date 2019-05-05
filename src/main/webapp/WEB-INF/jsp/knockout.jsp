@@ -13,14 +13,21 @@
 </div>
 
 <script>
-    var minimalData = {
-        teams : [
-            ["Team 1", "Team 2"], /* first matchup */
-            ["Team 3", "Team 4"]  /* second matchup */
+
+    var singleElimination = {
+        "teams": [                                          // Matchups
+            ["${players[i].name}", "${players[i+1].name}"], // First match
+            ["${players[2].name}", "${players[3].name}"]  // Second match
         ],
-        results : [
-            [[1,2], [3,4]],       /* first round */
-            [[4,6]]        /* second round */
+        "results": [            // List of brackets (single elimination, so only one bracket)
+            [                     // List of rounds in bracket
+                [                   // First round in this bracket
+                               // Team 3 vs Team 4
+                ],
+                [                   // Second (final) round in single elimination bracket
+                                // Match for 3rd place
+                ]
+            ]
         ]
     }
 
@@ -30,7 +37,7 @@
             scoreWidth: 40,
             matchMargin: 70,
             roundMargin: 100,
-            init: minimalData
+            init: singleElimination
         };
 
         $('.bracket').bracket(resizeParameters)
