@@ -113,4 +113,12 @@ public class MainController {
         return new CustomResponse("success");
     }
 
+    @RequestMapping(value = "stage/knockout", method = RequestMethod.GET)
+    public String getKnockoutPage  (@RequestParam Map<String, String> requestData, ModelMap model) {
+
+        if (tournament == null)
+            return "redirect:/";
+
+        return "knockout";
+    }
 }

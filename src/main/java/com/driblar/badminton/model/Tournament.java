@@ -18,6 +18,8 @@ public class Tournament {
 
     private RoundRobinStage roundRobinStage;
 
+    private KnockoutStage knockoutStage;
+
     public Tournament (int participants, int pools, int qualify) {
         this.playersSize = participants;
 
@@ -26,6 +28,8 @@ public class Tournament {
             players.add(new Player(i+1));
 
         roundRobinStage = new RoundRobinStage(players, pools, qualify);
+
+        knockoutStage = new KnockoutStage((participants/pools) * qualify);
 
     }
 

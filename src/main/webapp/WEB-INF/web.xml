@@ -31,4 +31,11 @@
     <put-attribute name="body"
                    value="/WEB-INF/jsp/roundRobin.jsp" />
   </definition>
+
+  <definition name="knockout" extends="template-def">
+    <put-attribute name="title"
+                   value="Knockout | Tourganize" />
+    <put-attribute name="body"
+                   value="/WEB-INF/jsp/knockout.jsp" />
+  </definition>
 </tiles-definitions>

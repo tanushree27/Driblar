@@ -27,12 +27,12 @@ public class Pool {
     }
 
     public void evalCompleted (int qualify) {
+        for (Player player: players) {
+            player.setQualified(false);
+        }
         for (Match match : this.matches) {
             if (match.getOutcome() == null) {
                 this.complete = false;
-                for (Player player: players) {
-                    player.setQualified(false);
-                }
                 return;
             }
         }

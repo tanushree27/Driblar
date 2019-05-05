@@ -10,6 +10,7 @@
     <a class="nav-link" href="/">New</a></li>
     <a class="nav-link" href="/tournament">Tournament</a>
     <a class="nav-link" href="/stage/roundrobin">RoundRobin Stage</a>
+    <a class="nav-link" href="/stage/knockout">Knockout Stage</a>
 </nav>
 
 <style>
