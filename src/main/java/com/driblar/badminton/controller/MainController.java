@@ -141,10 +141,10 @@ public class MainController {
 
         tournament.getKnockoutStage().setPlayers(playerlist);
 
-    model.addAttribute("players", playerlist);
+        model.addAttribute("players", playerlist);
         model.addAttribute("knockout", tournament.getKnockoutStage());
         model.addAttribute("lockable", playerlist.size() == tournament.getKnockoutStage().getNumberOfPlayers() ? 1 : 0);
-
+        model.addAttribute("locked", tournament.getKnockoutStage().isLockBracket() ? 1 : 0);
         return "knockout";
     }
 
@@ -155,11 +155,10 @@ public class MainController {
     }
 
 
-    @ResponseBody
-    @RequestMapping(value = "/lock/bracket", method = RequestMethod.POST)
-    public CustomResponse lockBracket (@RequestBody Map<String, String> requestData, ModelMap model) {
+    @RequestMapping(value = "/lock/bracket", method = RequestMethod.GET)
+    public String lockBracket (@RequestParam Map<String, String> requestData, ModelMap model) {
         tournament.getKnockoutStage().setLockBracket(true);
-        return new CustomResponse("bracket locked");
+        return "redirect:/stage/knockout";
     }
 
 

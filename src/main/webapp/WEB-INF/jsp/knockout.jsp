@@ -8,9 +8,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="container-fluid">
-    <c:if test="${lockable == 1}">
+    <c:if test="${lockable == 1 && locked == 0}">
     <div class="row">
-            <button type="button" class="btn btn-primary" id="lock-button">Lock Bracket</button>
+            <form action="/lock/bracket" method="GET" class="form-group">
+                <input type="hidden" class="form-control" name="lock" value="true" />
+                <button type="submit" class="btn btn-primary" id="lock-button">Lock Bracket</button>
+            </form>
     </div>
     </c:if>
     <div class="row">
@@ -56,22 +59,35 @@
 
         console.log(singleElimination);
 
-        var resizeParameters = {
-            teamWidth: 100,
-            scoreWidth: 40,
-            matchMargin: 70,
-            roundMargin: 100,
-            disableTeamEdit: true,
-            disableToolbar: true,
-            save: saveFn,
-            init: singleElimination
-        };
+        <c:choose>
+            <c:when test="${locked == 0}">
+                var resizeParameters = {
+                    teamWidth: 100,
+                    scoreWidth: 40,
+                    matchMargin: 70,
+                    roundMargin: 100,
+                    init: singleElimination
+                };
+            </c:when>
+            <c:otherwise>
+                var resizeParameters = {
+                    teamWidth: 100,
+                    scoreWidth: 40,
+                    matchMargin: 70,
+                    roundMargin: 100,
+                    disableTeamEdit: true,
+                    disableToolbar: true,
+                    save: saveFn,
+                    init: singleElimination
+                };
+            </c:otherwise>
+        </c:choose>
 
         var container =  $('.bracket')
         container.bracket(resizeParameters)
 
 
-        $('#lock-button').on('click', function () {
+   /*     $('#lock-button').on('click', function () {
 
             $.ajax({
                 url: '/lock/bracket',
@@ -83,13 +99,14 @@
                 }),
                 success: function (data) {
                     console.log(data);
+
                 },
                 error: function (errorMessage) {
                     console.error(errorMessage);
                 }
             });
         })
-
+*/
     });
 
 </script>
