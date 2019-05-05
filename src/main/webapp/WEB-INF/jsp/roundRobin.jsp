@@ -20,10 +20,10 @@
                 <small id="tournamentHelp" class="text-light form-text" style="margin-left: 30px;">Select Pool to display matches.</small>
             </div>
         </form>
-
+    </div>
         <div class="row">
             <c:forEach items="${pool.matches}" var="match" varStatus="matchIndex">
-            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+            <div class="col-md-3 col-sm-4 col-xs-6">
                 <table class="table table-dark table-match" id="match-${matchIndex.index}">
                     <thead>
                         <tr>
@@ -78,7 +78,6 @@
             </div>
             </c:forEach>
         </div>
-    </div>
 </div>
 
 <script>
@@ -89,6 +88,7 @@
         })
     });
 
+    <c:if test="${!bracketLocked}">
     function selectWin(matchIndex, player) {
         console.log("match "+matchIndex+"  player "+player);
 
@@ -140,7 +140,9 @@
                 console.error(errorMessage);
             }
         });
-    }
+
+        }
+    </c:if>
 </script>
 
 <style>

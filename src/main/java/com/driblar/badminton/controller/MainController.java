@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ import java.util.Map;
 @Controller
 public class MainController {
 
-    private Tournament tournament = new Tournament(24, 6, 2);
+    private Tournament tournament = new Tournament(12, 3, 2);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomePage (ModelMap model) {
@@ -90,6 +89,7 @@ public class MainController {
 
         model.addAttribute("selectPool", poolNumber + 1);
         model.addAttribute("pool", tournament.getRoundRobinStage().getPools().get(poolNumber));
+        model.addAttribute("bracketLocked", tournament.getKnockoutStage().isLockBracket());
 
         return "roundrobin";
     }
@@ -121,16 +121,52 @@ public class MainController {
         if (tournament == null)
             return "redirect:/";
 
+        for (Player player : tournament.getPlayers()) {
+            player.setPoints(0);
+            player.getRoundrobinLoss(tournament.getRoundRobinStage());
+            player.getRoundrobinTies(tournament.getRoundRobinStage());
+            player.getRoundrobinWins(tournament.getRoundRobinStage());
+        }
+
         List<Player> playerlist = new ArrayList<>();
+        for (Pool pool : tournament.getRoundRobinStage().getPools())
+            pool.evalCompleted(tournament.getRoundRobinStage().getNumberQualify());
+
         for(Player player: tournament.getPlayers())
         {
             if(player.isQualified()){
                 playerlist.add(player);
             }
         }
-        model.addAttribute("players",playerlist);
+
+        tournament.getKnockoutStage().setPlayers(playerlist);
+
+    model.addAttribute("players", playerlist);
         model.addAttribute("knockout", tournament.getKnockoutStage());
+        model.addAttribute("lockable", playerlist.size() == tournament.getKnockoutStage().getNumberOfPlayers() ? 1 : 0);
 
         return "knockout";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get/knockout/data", method = RequestMethod.GET)
+    public KnockoutData getKnockoutData (ModelMap model) {
+        return tournament.getKnockoutStage().getKnockoutData();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/lock/bracket", method = RequestMethod.POST)
+    public CustomResponse lockBracket (@RequestBody Map<String, String> requestData, ModelMap model) {
+        tournament.getKnockoutStage().setLockBracket(true);
+        return new CustomResponse("bracket locked");
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/update/bracket", method = RequestMethod.POST)
+    public CustomResponse updateBracket (@RequestBody KnockoutData data, ModelMap model) {
+        tournament.getKnockoutStage().setKnockoutData(data);
+        return new CustomResponse("bracket updated");
     }
 }

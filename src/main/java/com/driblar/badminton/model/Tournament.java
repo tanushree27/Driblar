@@ -24,12 +24,15 @@ public class Tournament {
         this.playersSize = participants;
 
         players = new ArrayList<>();
+
         for (int i = 0; i < participants; i++)
             players.add(new Player(i+1));
 
         roundRobinStage = new RoundRobinStage(players, pools, qualify);
 
-        knockoutStage = new KnockoutStage((participants/pools) * qualify);
+        System.out.println("knockout players : "+(participants/pools) * qualify);
+
+        knockoutStage = new KnockoutStage((participants/pools) * qualify, players);
 
     }
 
