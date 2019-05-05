@@ -73,7 +73,32 @@
                 font-weight: bold;
             }
 
+            .trend-win {
+                background-color: dodgerblue;
+            }
+            .trend-qualified {
+                background-color: limegreen;
+            }
 
+            .trend-loss {
+                background-color: firebrick;
+            }
+
+            .trend-tie {
+                background-color: goldenrod;
+            }
+
+            .trend-win, .trend-tie, .trend-loss, .trend-qualified {
+                text-shadow: none;
+                font-weight: bold;
+                font-size: 11px;
+                color: #000;
+                float: right;
+                display: block;
+                width: 20px;
+                text-align: center;
+                margin: 4px;
+            }
 
         </style>
     </body>

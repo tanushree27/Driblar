@@ -5,7 +5,7 @@
   Time: 02:14
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;tcharset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="container-fluid">
     <div class="row">
@@ -22,18 +22,54 @@
         </form>
 
         <div class="row">
-            <c:forEach items="${pool.matches}" var="match">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                <table class="table table-dark table-match">
-                    <h3 class="text-white">Pool ${loop.index + 1}</h3>
+            <c:forEach items="${pool.matches}" var="match" varStatus="matchIndex">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+                <table class="table table-dark table-match" id="match-${matchIndex.index}">
                     <thead>
                         <tr>
-                            <td class="hash-class" rowspan="2">#</td>
-                            <th>${match.player1.name == null ? "Player " : match.player1.name}${match.player1.name == null ? match.player1.id : ""}</th>
+                            <td class="click-to-win hash-class" rowspan="2" onclick="selectWin(${matchIndex.index}, 0)">#</td>
+                            <th class="click-to-win" onclick="selectWin(${matchIndex.index}, 1)">${match.player1.name == null ? "Player " : match.player1.name}${match.player1.name == null ? match.player1.id : ""}
+                                <c:choose>
+                                    <c:when test="${match.outcome != null}">
+                                        <c:choose>
+                                            <c:when test="${match.outcome eq 'TIE'}">
+                                                <div id="player1-match-${matchIndex.index}" class="trend-tie">T</div>
+                                            </c:when>
+                                            <c:when test="${match.outcome eq 'PLAYER1'}">
+                                                <div id="player1-match-${matchIndex.index}" class="trend-win">W</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div id="player1-match-${matchIndex.index}" class="trend-loss">L</div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div id="player1-match-${matchIndex.index}"></div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </th>
                         </tr>
-
                         <tr>
-                            <td>${match.player2.name == null ? "Player " : match.player2.name}${match.player2.name == null ? match.player2.id : ""}</td>
+                            <td class="click-to-win" onclick="selectWin(${matchIndex.index}, 2)">${match.player2.name == null ? "Player " : match.player2.name}${match.player2.name == null ? match.player2.id : ""}
+                                <c:choose>
+                                    <c:when test="${match.outcome != null}">
+                                        <c:choose>
+                                            <c:when test="${match.outcome eq 'TIE'}">
+                                                <div id="player2-match-${matchIndex.index}" class="trend-tie">T</div>
+                                            </c:when>
+                                            <c:when test="${match.outcome eq 'PLAYER2'}">
+                                                <div id="player2-match-${matchIndex.index}" class="trend-win">W</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div id="player2-match-${matchIndex.index}" class="trend-loss">L</div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div id="player2-match-${matchIndex.index}"></div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,9 +88,73 @@
             $("form[name='poolSelectForm']").submit();
         })
     });
+
+    function selectWin(matchIndex, player) {
+        console.log("match "+matchIndex+"  player "+player);
+
+        $.ajax({
+            url: '/match/winner',
+            type: 'POST',  // http method
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                'pool': ${selectPool},
+                'match': matchIndex,
+                'player': player
+            }),  // data to submit
+            success: function (data) {
+                //data = JSON.parse(data);
+                if (player == 1) {
+                    $('#player1-match-' + matchIndex).text('W');
+                    $('#player1-match-' + matchIndex).addClass('trend-win');
+                    $('#player1-match-' + matchIndex).removeClass('trend-loss');
+                    $('#player1-match-' + matchIndex).removeClass('trend-tie');
+
+                    $('#player2-match-' + matchIndex).text('L');
+                    $('#player2-match-' + matchIndex).addClass('trend-loss');
+                    $('#player2-match-' + matchIndex).removeClass('trend-win');
+                    $('#player2-match-' + matchIndex).removeClass('trend-tie');
+                } else if (player == 2) {
+                    $('#player2-match-' + matchIndex).text('W');
+                    $('#player2-match-' + matchIndex).addClass('trend-win');
+                    $('#player2-match-' + matchIndex).removeClass('trend-loss');
+                    $('#player2-match-' + matchIndex).removeClass('trend-tie');
+
+                    $('#player1-match-' + matchIndex).text('L');
+                    $('#player1-match-' + matchIndex).addClass('trend-loss');
+                    $('#player1-match-' + matchIndex).removeClass('trend-win');
+                    $('#player1-match-' + matchIndex).removeClass('trend-tie');
+                } else {
+                    $('#player2-match-' + matchIndex).text('T');
+                    $('#player2-match-' + matchIndex).addClass('trend-tie');
+                    $('#player2-match-' + matchIndex).removeClass('trend-win');
+                    $('#player2-match-' + matchIndex).removeClass('trend-loss');
+
+                    $('#player1-match-' + matchIndex).text('T');
+                    $('#player1-match-' + matchIndex).addClass('trend-tie');
+                    $('#player1-match-' + matchIndex).removeClass('trend-win');
+                    $('#player1-match-' + matchIndex).removeClass('trend-loss');
+                }
+            },
+            error: function (errorMessage) {
+                console.error(errorMessage);
+            }
+        });
+    }
 </script>
 
 <style>
+    .click-to-win {
+        cursor: pointer;
+    }
+    .click-to-win:hover {
+        -webkit-filter: brightness(60%);
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        -ms-transition: all 1s ease;
+        transition: all 1s ease;
+    }
     td, th {
         border-top: 0px !important;
     }

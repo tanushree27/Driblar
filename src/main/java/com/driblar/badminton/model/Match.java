@@ -7,7 +7,9 @@ import lombok.Setter;
 public class Match {
     private Player player1, player2;
 
-    private Player winner;
+    public enum Outcome {PLAYER1, PLAYER2, TIE};
+
+    private Outcome outcome;
 
     public Match (Player p1, Player p2) {
         player1 = p1;

@@ -22,6 +22,7 @@
             <th scope="col">Wins</th>
             <th scope="col">Ties</th>
             <th scope="col">Loss</th>
+            <th scope="col">Points</th>
         </tr>
         </thead>
         <tbody>
@@ -48,6 +49,11 @@
             <td>${player.roundRobinWins}</td>
             <td>${player.roundRobinTies}</td>
             <td>${player.roundRobinLoss}</td>
+            <td>${player.points}
+                <c:if test="${player.qualified}">
+                    <div class="trend-qualified">Q</div>
+                </c:if>
+            </td>
         </tr>
         </c:forEach>
         </tbody>

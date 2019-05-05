@@ -18,14 +18,14 @@ public class Tournament {
 
     private RoundRobinStage roundRobinStage;
 
-    public Tournament (int participants, int pools) {
+    public Tournament (int participants, int pools, int qualify) {
         this.playersSize = participants;
 
         players = new ArrayList<>();
         for (int i = 0; i < participants; i++)
             players.add(new Player(i+1));
 
-        roundRobinStage = new RoundRobinStage(players, pools);
+        roundRobinStage = new RoundRobinStage(players, pools, qualify);
 
     }
 

@@ -1,20 +1,19 @@
 package com.driblar.badminton.controller;
 
-import com.driblar.badminton.model.CustomResponse;
-import com.driblar.badminton.model.Tournament;
-import com.fasterxml.jackson.databind.JsonSerializable;
+import com.driblar.badminton.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Map;
 
 @RequestMapping("/")
 @Controller
 public class MainController {
 
-    private Tournament tournament = new Tournament(24, 6);
+    private Tournament tournament = new Tournament(24, 6, 2);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getHomePage (ModelMap model) {
@@ -27,8 +26,9 @@ public class MainController {
         String name = requestData.get("tournamentName");
         int numberOfPlayers = Integer.parseInt(requestData.get("playersSize"));
         int pools = Integer.parseInt(requestData.get("poolSize"));
+        int advanceSize = Integer.parseInt(requestData.get("advanceSize"));
 
-        tournament = new Tournament(numberOfPlayers, pools);
+        tournament = new Tournament(numberOfPlayers, pools, advanceSize);
         tournament.setName(name);
         model.addAttribute("tournament", tournament);
 
@@ -53,9 +53,23 @@ public class MainController {
 
     @RequestMapping(value = "tournament", method = RequestMethod.GET)
     public String getTournamentPage (ModelMap model) {
-        model.addAttribute("tournament", tournament);
         if (tournament == null)
             return "redirect:/";
+
+        for (Player player : tournament.getPlayers()) {
+            player.setPoints(0);
+            player.getRoundrobinLoss(tournament.getRoundRobinStage());
+            player.getRoundrobinTies(tournament.getRoundRobinStage());
+            player.getRoundrobinWins(tournament.getRoundRobinStage());
+        }
+
+        for (Pool pool : tournament.getRoundRobinStage().getPools())
+            pool.evalCompleted(tournament.getRoundRobinStage().getNumberQualify());
+
+        System.out.println("qualified " +tournament.getRoundRobinStage().getNumberQualify());
+        model.addAttribute("tournament", tournament);
+
+
         return "tournament";
     }
 
@@ -78,5 +92,25 @@ public class MainController {
         return "roundrobin";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/match/winner", method = RequestMethod.POST)
+    public CustomResponse saveMatchWinner (@RequestBody Map<String, String> requestData, ModelMap model, HttpServletRequest request) {
+
+        int pool = Integer.parseInt(requestData.get("pool")) - 1;
+        int matchIn = Integer.parseInt(requestData.get("match"));
+        int player = Integer.parseInt(requestData.get("player"));
+
+        Match match = tournament.getRoundRobinStage().getPools().get(pool).getMatches().get(matchIn);
+
+        if (player == 1)
+            match.setOutcome(Match.Outcome.PLAYER1);
+        else if (player == 2)
+            match.setOutcome(Match.Outcome.PLAYER2);
+        else
+            match.setOutcome(Match.Outcome.TIE);
+
+
+        return new CustomResponse("success");
+    }
 
 }

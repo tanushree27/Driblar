@@ -7,18 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
-public class RoundRobinStage extends Stage {
+public class RoundRobinStage {
 
     private List<Pool> pools;
 
-    @Override
-    public List<Player> getTop(int top) {
-        return null;
-    }
+    private int numberQualify;
 
-    RoundRobinStage (List<Player> players, int poolSize) {
+    RoundRobinStage (List<Player> players, int poolSize, int qualify) {
         pools = new ArrayList<>();
-
+        this.numberQualify = qualify;
 
         for (int i = 0; (i + 1) * poolSize <= players.size(); i++) {
 
