@@ -10,6 +10,8 @@
 <div class="container-fluid">
     <div class="row">
         <form name="poolSelectForm" class="form-group" action="/stage/roundrobin" method="get">
+            <p>Click on # to illustrate a Tie</p>
+            <p>Click on Player to indicate that he/she is the winner of that match</p>
             <div class="form-group">
                 <label for="sel1">Select Pool:</label>
                 <select class="form-control" id="sel1" name="poolNum">
@@ -166,5 +168,8 @@
     .hash-class {
         vertical-align: middle !important;
         width: 20%;
+    }
+    p{
+        color:#ccd223;
     }
 </style>
