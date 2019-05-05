@@ -10,8 +10,10 @@
 <div class="container-fluid">
     <div class="row">
         <form name="poolSelectForm" class="form-group" action="/stage/roundrobin" method="get">
-            <p>Click on # to illustrate a Tie</p>
-            <p>Click on Player to indicate that he/she is the winner of that match</p>
+            <c:if test="${!bracketLocked}">
+                <p>Click on # to illustrate a Tie</p>
+                <p>Click on Player to indicate that he/she is the winner of that match</p>
+            </c:if>
             <div class="form-group">
                 <label for="sel1">Select Pool:</label>
                 <select class="form-control" id="sel1" name="poolNum">

@@ -16,6 +16,9 @@
             </form>
     </div>
     </c:if>
+    <c:if test="${locked == 1}">
+        <p>Click "--" to edit scores.</p>
+    </c:if>
     <div class="row">
         <div class="bracket"></div>
     </div>
@@ -110,3 +113,8 @@
     });
 
 </script>
+<style>
+    p{
+        color:#ccd223;
+    }
+</style>
